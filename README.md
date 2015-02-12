@@ -82,5 +82,5 @@ If the function's params are callback, then when any callback is called below me
 
 Honggang Li: 2315872416@qq.com
 Zhanglin Liu: way_lzl@sina.com
-Ruifen Shen:  shenrfen@gmail.com
+Ruifen Shen:  shenrfen@qq.com
  
