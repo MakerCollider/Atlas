@@ -9,6 +9,7 @@ var redUtil = function(node, config) {
 redUtil.prototype.normalCallbackArg = function(msg, idx, arg) {
 
     var self = this;
+
     if(typeof arg == 'Function') {
         return arg;
     }
@@ -38,7 +39,7 @@ redUtil.prototype.checkMethod = function(msg) {
 
     var method = msg.iot.method;
 
-    if(method != this.config.method) {
+    if(method != this.config.name) {
         return false;
     }
 
@@ -57,7 +58,7 @@ redUtil.prototype.isValid = function(msg) {
 }
 
 redUtil.prototype.send = function(msg) {
-	this.node.log('send: ' + JSON.stringify(msg));
+    this.node.log('send: ' + JSON.stringify(msg));
     this.node.send(msg);	
 }
 

@@ -99,7 +99,7 @@ module.exports = function(RED) {
                     cache.shift();
                 }
             } else {
-                node.log('illegal query: ' + data);
+                node.log('illegal query: ' + JSON.stringify(data));
             }
 
         }
