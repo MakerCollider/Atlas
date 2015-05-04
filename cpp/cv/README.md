@@ -24,15 +24,7 @@ cmake ..
 make
 ```
 
-* Build node-red node. Firstly you should build library. Because io-js for node-red is not ready, you need to use prepared node-red files after node addon is built.
-
+* Build Atlas module
 ```shell
-../io-js/utils/autogen/run.py -c config_mac.py
-cd ../Atlas/iot/sample/face_detection/addon
-node-gyp rebuild
-# use prepared node-red files
-cd ..
-rm *_GEN*
-cp ../../../../face_detection/red/* .
+make
 ```
-
