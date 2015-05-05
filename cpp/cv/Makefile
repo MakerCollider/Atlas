@@ -6,7 +6,7 @@ all: build install
 build:
 	mkdir -p build
 	cd build; cmake ..; make
-	$(IO_JS) -c config_mac.py
+	$(IO_JS) -c config_cv.py
 	cd $(CV_NODE)/addon/;node-gyp rebuild 
 
 install:
