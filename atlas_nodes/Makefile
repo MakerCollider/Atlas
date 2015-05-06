@@ -3,7 +3,7 @@ TARGET=$(RED_DIR)/nodes/atlas_nodes
 all: install
 
 install:
-	ln -sf `pwd` $(TARGET)
+	ln -sf `pwd` $(RED_DIR)/nodes/
 clean:
 	rm -f $(TARGET)
 	

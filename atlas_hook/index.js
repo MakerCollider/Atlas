@@ -81,12 +81,12 @@ function uploadReq(req, res, next) {
 
   var rpath = req.path;
 
-  console.log('recv:   ' + rpath);
   if(rpath.indexOf(prefix) != 0) {
     next();
     return undefined;
   }
 
+  //console.log('recv:   ' + rpath);
   rpath = rpath.replace(prefix, '');
 
   for(idx in config) {
@@ -96,7 +96,7 @@ function uploadReq(req, res, next) {
     }
   }
 
-  console.log(rpath + " => " + JSON.stringify(config[rpath]));
+  //console.log(rpath + " => " + JSON.stringify(config[rpath]));
    
   var info = "Failed!";
 
