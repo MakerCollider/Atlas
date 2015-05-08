@@ -22,7 +22,7 @@ struct cameraConfig {
     int height;
 };
 
-#define cameraConfig_interval 100
+#define cameraConfig_interval 500
 #define cameraConfig_camId    -1
 #define cameraConfig_width    160
 #define cameraConfig_height   120

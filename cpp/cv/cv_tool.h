@@ -16,7 +16,7 @@ struct fakeCameraConfig {
     int height;
 };
 
-#define fakeCameraConfig_interval 100
+#define fakeCameraConfig_interval 1000
 #define fakeCameraConfig_imgFile  "static.jpg"
 #define fakeCameraConfig_width    160
 #define fakeCameraConfig_height   120
