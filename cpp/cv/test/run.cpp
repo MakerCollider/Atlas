@@ -37,14 +37,14 @@ static img2Base64Config i2bConfig = {
 void fakeCaptured(unsigned long matHandle)
 {
     Mat *mat = (Mat*)matHandle;
-    imshow("fakeCamera", *mat);
+    //imshow("fakeCamera", *mat);
     faceDetectOnData(matHandle);
 }
 
 void captured(unsigned long matHandle)
 {
     Mat *mat = (Mat*) matHandle;
-    imshow("camera", *mat);
+    //imshow("camera", *mat);
     faceDetectOnData(matHandle);
 }
 
@@ -56,7 +56,7 @@ void fdNum(int num)
 void fdImg(unsigned long matHandle)
 {
     Mat *mat = (Mat*)matHandle;
-    imshow("faces", *mat);
+    //imshow("faces", *mat);
     img2Base64OnData(matHandle);
 }
 
@@ -66,17 +66,17 @@ void fdAll(int num, unsigned long matHandle)
 
 void getBase64(char *base64)
 {
-    printf("%s\n", base64);
+    //printf("%s\n", base64);
 }
 
 int main( int argc, char** argv )
 {
-    namedWindow("camera");
-    namedWindow("fakeCamera");
-    namedWindow("faces");
+    //namedWindow("camera");
+    //namedWindow("fakeCamera");
+    //namedWindow("faces");
 
     fakeCameraInit(fakeCamConfig, fakeCaptured);
-    //cameraInit(camConfig, captured);
+    cameraInit(camConfig, captured);
     faceDetectInit(fdConfig, fdNum, fdImg, fdAll);
     img2Base64Init(i2bConfig, getBase64);
  

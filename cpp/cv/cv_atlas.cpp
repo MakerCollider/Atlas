@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <opencv2/opencv.hpp>
 #include <vector>
@@ -31,7 +32,7 @@ void run_uv_timer(uv_timer_t *req)
     cap >> frame;
     capCb((unsigned long)&frame);
     
-    waitKey(1);
+    //waitKey(1);
 }
 cameraConfig camConfig;
 
@@ -50,8 +51,8 @@ int cameraInit(cameraConfig config, cameraCb cb)
     }
     
     
-    cap.set(CAP_PROP_FRAME_WIDTH,  config.width);
-    cap.set(CAP_PROP_FRAME_HEIGHT, config.height);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH,  config.width);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT, config.height);
     
     CV_PRINT("initialized camera %d with res %d x %d\n", config.camId, config.width, config.height);
     
