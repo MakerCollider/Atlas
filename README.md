@@ -11,8 +11,6 @@
 ## Setup
 
 ``` shell
-git clone https://github.com/node-red/node-red
-
 git clone https://github.com/ilc-opensource/io-js
 cd io-js
 git checkout nodered
@@ -20,6 +18,8 @@ cd ..
 
 git clone https://github.com/MakerCollider/Atlas.git
 cd Atlas
+git checkout Atlas_edison
+./npm_env_setup.sh     //it will take a long time
 make
 ```
 
