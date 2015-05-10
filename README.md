@@ -12,6 +12,9 @@
 
 ``` shell
 git clone https://github.com/node-red/node-red
+cd node-red
+npm install
+cd ..
 
 git clone https://github.com/ilc-opensource/io-js
 cd io-js

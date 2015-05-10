@@ -28,15 +28,10 @@ module.exports = function(RED) {
         }
 
         node.on('input', function(msg) {
-
-            console.log('recv: ' + JSON.stringify(msg));
-
             sendStat();
         });
 
-        node.log('send initial ' + stat);
-        node.send({'payload': stat});
-        setStat(stat); 
+        sendStat();
    }
 
     RED.nodes.registerType('toggle', toggle);
