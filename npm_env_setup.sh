@@ -39,4 +39,5 @@ make
 make install
 cd ../../
 rm ./libs -r
+cd Atlas
 set +x
