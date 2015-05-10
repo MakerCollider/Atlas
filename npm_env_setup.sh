@@ -1,30 +1,24 @@
 #/bin/bash
-
-cd ~/
-echo "installing node-red ......"
-npm install node-red
-cd ./node_modules/node-red
-echo "configurating node-red ......"
+cd ../node-red
+npm config set registry http://registry.cnpmjs.org
+echo "configuration node-red ......"
 npm install
 echo "installing bindings ......"
-npm install -g bindings
+npm install bindings
 echo "installing node-gyp ......"
-npm install -g node-gyp
+npm install node-gyp
 echo "installing debug ......"
-npm install -g debug
+npm install debug
 echo "installing express ......"
-npm install -g express
+npm install express
 echo "installing socket.io ......"
-npm install -g socket.io
+npm install socket.io
 echo "installing serve-favicon ......"
-npm install -g serve-favicon
+npm install serve-favicon
 echo "installing morgan ......"
-npm install -g morgan
+npm install morgan
 echo "installing cookie-parser ......"
-npm install -g cookie-parser
+npm install cookie-parser
 echo "installing body-parser ......"
-npm install -g body-parser
-echo "move node-red to root ......"
-cd ~/
-mv ./node_modules/node-red ./
-cd ./Atlas
+npm install body-parser
+cd ../
