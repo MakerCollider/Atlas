@@ -4,8 +4,8 @@ cd ../node-red
 npm config set registry http://registry.cnpmjs.org
 npm install -g node-gyp
 echo "configuration node-red ......"
-npm install
 npm install -g grunt-cli
+npm install
 grunt build
 echo "installing bindings ......"
 npm install -g bindings
@@ -24,4 +24,19 @@ npm install -g cookie-parser
 echo "installing body-parser ......"
 npm install -g body-parser
 cd ../
+mkdir libs
+cd libs
+echo "installing opencv"
+opkg install opencv-dev
+opkg remove opencv-dev --force-removal-of-dependent-packages
+opkg install opencv-dev
+echo "installing libuv"
+wget http://dist.schmorp.de/libev/libev-4.19.tar.gz
+tar -xvf libev-4.19.tar.gz                                                           
+cd libev-4.19                                                                        
+./configure                                                                          
+make                                                                                 
+make install
+cd ../../
+rm ./libs -r
 set +x
