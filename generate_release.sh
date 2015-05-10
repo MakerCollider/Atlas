@@ -1,3 +1,3 @@
-cd ..
-TAR_NAME=atlas_`date +"%Y_%m_%d"`.tgz
-tar -czvf $TAR_NAME --exclude=flows_* --exclude=.git --exclude=.DS_Store node-red Atlas
+cd ../
+TAR_NAME=atlas_`date +"%Y_%m_%d"`.tar.gz
+tar -cvzf $TAR_NAME node-red Atlas io-js README_DEV.md -X ./Atlas/exclude_file
