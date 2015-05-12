@@ -28,7 +28,7 @@ void fake_cam_run_uv_timer(uv_timer_t *req)
 {
     fakeCamCb((unsigned long)&fakeCamFrame);
     
-    waitKey(1);
+    //waitKey(1);
 }
 
 

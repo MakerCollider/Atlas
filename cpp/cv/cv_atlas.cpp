@@ -31,7 +31,7 @@ void run_uv_timer(uv_timer_t *req)
     cap >> frame;
     capCb((unsigned long)&frame);
     
-    waitKey(1);
+    //waitKey(1);
 }
 cameraConfig camConfig;
 
