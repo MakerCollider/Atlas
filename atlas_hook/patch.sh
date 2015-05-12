@@ -1,4 +1,4 @@
-CMD="require('../Atlas/atlas_hook').hook(app, server, express);"
+CMD="require('./atlas_hook').hook(app, server, express);"
 echo "patching... $FILE"
 
 if grep atlas_hook $1 

@@ -2,6 +2,7 @@
   "name": "atlas-hook",
   "dependencies": {
     "multer": "*",
-    "serve-index": "*"
+    "serve-index": "*",
+    "socket.io": "*"
   }
 }

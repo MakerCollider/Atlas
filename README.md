@@ -12,9 +12,7 @@
 
 ``` shell
 git clone https://github.com/node-red/node-red
-cd node-red
-npm install
-cd ..
+# follow node-red/README.md to install
 
 git clone https://github.com/ilc-opensource/io-js
 cd io-js
@@ -24,5 +22,7 @@ cd ..
 git clone https://github.com/MakerCollider/Atlas.git
 cd Atlas
 make
+cd atlas_hook
+npm install
 ```
 
