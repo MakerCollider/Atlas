@@ -31,10 +31,11 @@ opkg install opencv-dev
 opkg remove opencv-dev --force-removal-of-dependent-packages
 opkg install opencv-dev
 echo "installing libuv"
-wget http://dist.schmorp.de/libev/libev-4.19.tar.gz
-tar -xvf libev-4.19.tar.gz                                                           
-cd libev-4.19                                                                        
-./configure                                                                          
+wget https://github.com/libuv/libuv/archive/v1.4.2.tar.gz --no-check-certificate
+tar -xvf v1.4.2.tar.gz                                                           
+cd libuv-1.4.2               
+sh autogen.sh                                                         
+./configure --prefix=/usr                                                                       
 make                                                                                 
 make install
 cd ../../
