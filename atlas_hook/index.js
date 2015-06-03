@@ -213,6 +213,11 @@ function uploadReq(req, res, next) {
 
 var server, app,express;
 var io;
+var recvEvent = {};
+
+var low =require('lowdb');
+var clientInfo = {};
+var genHtml = require('./genHtml.js');
 
 module.exports = {
 
@@ -231,10 +236,26 @@ module.exports = {
     app.use(prefix, serveIndex(__dirname + '/html', {'icons': true}));
  
     io = require('socket.io').listen(server);   
+
+    io.on('connection', function(socket) {
+        console.log('a client connected');
+        for(idx in recvEvent) {
+            console.log('register ' + idx);
+            socket.on(idx, recvEvent[idx]);
+        }
+    });
+
     console.log("=====> atlas hook");
 
     global.atlas = { 
-      'io': io
+      'on': function(e, cb) {
+        recvEvent[e] = cb;
+      },
+      'emit': function(e, data) {
+        io.emit(e, data);
+      },
+      'genHtml': genHtml,
+      'htmlDir': __dirname + '/html'
     };
   }
 };

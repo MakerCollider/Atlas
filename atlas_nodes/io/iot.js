@@ -37,18 +37,9 @@ var io = require('socket.io').listen(server);
 */
 
 //var io = require('../../../node-red/atlas_hook/').io;
-var io = global.atlas.io;
-var recvEvent = {};
-var outputMap = {};
-
-
-io.on('connection', function(socket) {
-    console.log('a client connected');
-    for(idx in recvEvent) {
-        console.log('register ' + idx);
-        socket.on(idx, recvEvent[idx]);
-    }
-});
+var atlas = global.atlas;
+var ejs = require('ejs');
+var fs = require('fs');
 
 module.exports = function(RED) {
 
@@ -83,30 +74,14 @@ module.exports = function(RED) {
 
         node.on('input', function(data) {
             if(typeof data == "object" && data['payload'] != undefined) {
-                io.emit(name, data.payload);
+                atlas.emit(name, data.payload);
             } else {
-                io.emit(name, data);
+                atlas.emit(name, data);
             }
         });
     };
 
     RED.nodes.registerType("iot-output", remoteIotOutput);
-
-    function dispImg(config) {
-        RED.nodes.createNode(this, config);
-        var node = this;
-        var name = config.name;
-
-        node.on('input', function(data) {
-            if(typeof data == "object" && data['payload'] != undefined) {
-                io.emit(name, data.payload);
-            } else {
-                io.emit(name, data);
-            }
-        });        
-    }
-
-    RED.nodes.registerType("dispImg", dispImg);
 
 };
 
