@@ -215,7 +215,6 @@ var server, app,express;
 var io;
 var recvEvent = {};
 
-var low =require('lowdb');
 var clientInfo = {};
 var genHtml = require('./genHtml.js');
 
