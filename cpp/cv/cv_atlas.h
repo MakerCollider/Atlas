@@ -6,6 +6,7 @@
 #define ERR_NO_CAMERA -2
 #define ERR_NO_FACE_CASCADE -3
 #define ERR_OVER_SIZE -4
+#define ERR_SINGLE_INSTANCE -5
 
 #define CV_PRINT printf
 
@@ -30,8 +31,8 @@ struct cameraConfig {
 typedef void(*cameraCb)(unsigned long);
 
 extern int cameraInit(cameraConfig config, cameraCb cb);
-extern int cameraRelease();
-extern int cameraOnData(int toggle);
+extern int cameraRelease(cameraConfig config);
+extern int cameraOnData(cameraConfig config, int toggle);
 
 
 
@@ -56,8 +57,8 @@ typedef void(*faceDetectAllCb)(int, unsigned long);
 
 extern int faceDetectInit(faceDetectConfig config, faceDetectNumCb ncb, faceDetectImgCb icb, faceDetectAllCb acb);
 
-extern int faceDetectOnData(unsigned long imgHandle);
-extern int faceDetectRelease();
+extern int faceDetectOnData(faceDetectConfig config, unsigned long imgHandle);
+extern int faceDetectRelease(faceDetectConfig config);
 
 /************************************************
  Img to Base64
@@ -78,7 +79,7 @@ struct img2Base64Config {
 typedef void(*img2Base64Cb)(char*);
 
 extern int img2Base64Init(img2Base64Config config,img2Base64Cb cb);
-extern int img2Base64OnData(unsigned long imgHandle);
-extern int img2Base64Release();
+extern int img2Base64OnData(img2Base64Config config, unsigned long imgHandle);
+extern int img2Base64Release(img2Base64Config config);
 
 #endif

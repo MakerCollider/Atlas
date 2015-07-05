@@ -8,88 +8,118 @@
 #include <uv.h>
 #include "cv_atlas.h"
 
+#include <map>
+
 using namespace std;
 using namespace cv;
 
 #define FACE_CASCADE "haarcascade_frontalface_alt.xml"
+
+struct context{
+    cameraConfig config;
+    VideoCapture *cap;
+    uv_timer_t   timer;
+    cameraCb     capCb;
+};
+
+map<int, context*> id2context;
 
 /************************************************
  Camera
  ************************************************/
 
 void *camLoop = NULL;
-uv_timer_t camTimer;
 
-VideoCapture cap;
+//VideoCapture cap;
 Mat frame;
 CascadeClassifier faceCascade;
 
-static cameraCb capCb = NULL;
-
 void run_uv_timer(uv_timer_t *req)
 {
-    cap >> frame;
-    capCb((unsigned long)&frame);
+    context *ctx = (context*)(req->data);
+
+    (*(ctx->cap)) >> frame;
     
+    (ctx->capCb)((unsigned long)&frame);
+
     //waitKey(1);
 }
-cameraConfig camConfig;
 
 int cameraInit(cameraConfig config, cameraCb cb)
-{
-    if(cb != NULL)
-        capCb = cb;
+{   
+    struct context *ctx = new struct context;
+
+    if(id2context.find(config.camId) != id2context.end()) {
+        CV_PRINT("has already initialized camera %d\n", config.camId);
+        return ERR_SINGLE_INSTANCE;
+    }
+    // init camera
+    VideoCapture *cap = new VideoCapture();
+    cap->open(config.camId);
     
-    camConfig = config;
-    
-    cap.open(config.camId);
-    
-    if(!cap.isOpened()) {
+    if(!cap->isOpened()) {
         CV_PRINT("can not init camera %d\n", config.camId);
         return ERR_NO_CAMERA;
     }
     
     
-    cap.set(CAP_PROP_FRAME_WIDTH,  config.width);
-    cap.set(CAP_PROP_FRAME_HEIGHT, config.height);
+    cap->set(CAP_PROP_FRAME_WIDTH,  config.width);
+    cap->set(CAP_PROP_FRAME_HEIGHT, config.height);
     
     CV_PRINT("initialized camera %d with res %d x %d\n", config.camId, config.width, config.height);
     
     // Initialize uv loop and timer
-    uv_timer_stop(&camTimer);
     
     if(camLoop == NULL) {
         camLoop = uv_default_loop();
     }
     
-    uv_timer_init((uv_loop_t*)camLoop, &camTimer);
-    camTimer.data = NULL;
-    uv_timer_start(&camTimer, run_uv_timer, 0, config.interval);
+    uv_timer_init((uv_loop_t*)camLoop, &(ctx->timer));
+    ctx->timer.data = (void*)ctx;
+
+    ctx->cap    = cap;
+    ctx->config = config;
+    ctx->capCb  = cb;
+
+    id2context[config.camId] = ctx;
+
+    uv_timer_start(&(ctx->timer), run_uv_timer, 0, config.interval);
     CV_PRINT("start timer with interval %d ms\n", config.interval);
-    
-    
+
     return ERR_NONE;
 }
 
-int cameraRelease()
+int cameraRelease(cameraConfig config)
 {
-    CV_PRINT("turn off camera(%d)\n", camConfig.camId);
-    cap.release();
-    uv_timer_stop(&camTimer);
+    CV_PRINT("turn off camera(%d)\n", config.camId);
+    if(id2context.find(config.camId) == id2context.end()) {
+        CV_PRINT("camera %d has been released, stop here\n", config.camId);
+        return ERR_NONE;
+    }
+
+    context *ctx = id2context[config.camId];
+
+    ctx->cap->release();
+    uv_timer_stop(&(ctx->timer));
     
+    delete(ctx);
+    id2context.erase(config.camId);
+
     return ERR_NONE;
 }
 
-int cameraOnData(int toggle)
+int cameraOnData(cameraConfig config, int toggle)
 {
-    
+    printf("onData with camID: %d\n", config.camId); 
+    context *ctx = id2context[config.camId];
+
     if(toggle) {
-        if(!cap.isOpened()) {
-            cameraInit(camConfig, NULL);
+        if(!(ctx->cap->isOpened())) {
+            cameraInit(config, NULL);
         }
     } else {
-        if(cap.isOpened()) {
-            cameraRelease();
+        if(ctx->cap->isOpened()) {
+            cameraRelease(config);
         }
     }
     
@@ -107,9 +137,17 @@ static faceDetectAllCb  fdAllCb;
 static faceDetectConfig fdConfig;
 
 Mat fdImg;
+bool fdInit = true;
 
 int faceDetectInit(faceDetectConfig config, faceDetectNumCb ncb, faceDetectImgCb icb, faceDetectAllCb acb)
 {
+    if(!fdInit) {
+        CV_PRINT("Error, only single faceDetect is allowed\n");        
+        return ERR_SINGLE_INSTANCE;
+    }
+
+    fdInit = !fdInit;
+
     if(!faceCascade.load(FACE_CASCADE)) {
         CV_PRINT("can not find face cascade file: %s\n", FACE_CASCADE);
         return ERR_NO_FACE_CASCADE;
@@ -126,7 +164,7 @@ int faceDetectInit(faceDetectConfig config, faceDetectNumCb ncb, faceDetectImgCb
     return ERR_NONE;
 }
 
-int faceDetectOnData(unsigned long imgHandle)
+int faceDetectOnData(faceDetectConfig config, unsigned long imgHandle)
 {
     Mat *mat = (Mat*)imgHandle;
     
@@ -159,6 +197,7 @@ int faceDetectOnData(unsigned long imgHandle)
 
 int faceDetectRelease()
 {
+    fdInit = true;
     return ERR_NONE;
 }
 
@@ -168,15 +207,22 @@ int faceDetectRelease()
 img2Base64Cb i2bcb;
 img2Base64Config i2bConfig;
 
+bool i2bInit = true;
 int img2Base64Init(img2Base64Config config,img2Base64Cb cb)
 {
+    if(!i2bInit) {
+        CV_PRINT("Error, only single img2base64 is allowed\n");
+        return ERR_SINGLE_INSTANCE;
+    }
+
+    i2bInit = !i2bInit;
     i2bcb = cb;
     i2bConfig = config;
     
     return ERR_NONE;
 }
 
-int img2Base64OnData(unsigned long imgHandle)
+int img2Base64OnData(img2Base64Config config, unsigned long imgHandle)
 {
     Mat src = *(Mat*)imgHandle;
     
@@ -224,7 +270,8 @@ int img2Base64OnData(unsigned long imgHandle)
     return ERR_NONE;
 }
 
-int img2Base64Release()
+int img2Base64Release(img2Base64Config config)
 {
-    
+    i2bInit = true;
+    return ERR_NONE;   
 }

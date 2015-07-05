@@ -5,9 +5,15 @@ all: build install
 
 build:
 	mkdir -p build
-	cd build; cmake ..; make
+	cd build; cmake .. ; make
 	$(IO_JS) -c config_cv.py
 	cd $(CV_NODE)/addon/;node-gyp rebuild 
+
+build_debug:
+	mkdir -p build
+	cd build; cmake .. -DCMAKE_BUILD_TYPE=debug; make
+	$(IO_JS) -c config_cv.py
+	cd $(CV_NODE)/addon/;node-gyp rebuild --debug 
 
 install:
 	cp haarcascade_frontalface_alt.xml $(RED_DIR) 
