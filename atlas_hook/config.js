@@ -1,13 +1,5 @@
 module.exports = {
 
-  "/fakeCamera" : {
-    "types": [".JPG", ".jpg"],
-    "action": "fakeCamera",
-    "path": "./",
-    "desc": "images for fake camera",
-    "run" : undefined,
-  },
-
   "/audio" : {
     "types": [".mp3", ".wav"],
     "action": "audio",
