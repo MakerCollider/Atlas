@@ -1,4 +1,5 @@
 module.exports = function(RED){ 
+    var checkPin = require("../../extends/check_pin");
     var upm_grove = require("jsupm_grove");
     function GroveRotary(config) {
         RED.nodes.createNode(this, config);
@@ -6,6 +7,23 @@ module.exports = function(RED){
         this.interval = config.interval;
         var node = this;
         node.analogPin = node.analogPin>>>0;
+        
+        var key = 'P'+node.analogPin;
+        if (checkPin.getAnalogPinValue(key)==1){
+            node.status({fill: "red", shape: "dot", text: "pin repeat"});
+            console.log('Rotary analog pin ' + node.analogPin +' repeat');
+            return;
+        }
+        else if (checkPin.getAnalogPinValue(key)==0){
+            checkPin.setAnalogPinValue(key, 1);
+            node.status({fill: "blue", shape: "ring", text: "pin check pass"});
+            console.log('Rotary analog pin ' + node.analogPin +' OK');
+        }
+        else{
+            node.status({fill: "blue", shape: "ring", text: "Unknown"});
+            console.log('unknown pin' + node.analogPin + ' key value' + checkPin.getAnalogPinValue(key));
+            return;
+        }
         var is_on = false;
         var waiting;
         var rotary = new upm_grove.GroveRotary(node.analogPin);
@@ -30,6 +48,7 @@ module.exports = function(RED){
         });
         this.on('close', function() {
                 clearInterval(waiting);
+            checkPin.initAnalogPin();  //init pin 
         });
     	function readrotaryvalue()
     	{

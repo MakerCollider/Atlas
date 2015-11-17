@@ -1,4 +1,5 @@
 module.exports = function(RED) {
+    var checkPin = require("../../extends/check_pin"); 
     var sensorModule = require('jsupm_ttp223');
     function GroveTouch(config) {
         RED.nodes.createNode(this, config);
@@ -7,6 +8,22 @@ module.exports = function(RED) {
         var node = this;
         var touchValue = null;
         node.digitalPin = node.digitalPin>>>0;
+        var key = 'P'+node.digitalPin;
+        if (checkPin.getDigitalPinValue(key)==1){
+            node.status({fill: "red", shape: "dot", text: "pin repeat"});
+            console.log('Touch digital pin ' + node.digitalPin +' repeat');
+            return;
+        }
+        else if (checkPin.getDigitalPinValue(key)==0){
+            checkPin.setDigitalPinValue(key, 1);
+            node.status({fill: "blue", shape: "ring", text: "pin check pass"});
+            console.log('Touch digital pin ' + node.digitalPin +' OK');
+        }
+        else{
+            node.status({fill: "blue", shape: "ring", text: "Unknown"});
+            console.log('unknown pin' + node.digitalPin + ' key value' + checkPin.getDigitalPinValue(key));
+            return;
+        }
         var touch = new sensorModule.TTP223(node.digitalPin);                 
 	var myinterval = setInterval(readTouchValue,100);
         this.on('close', function() {
@@ -16,6 +33,7 @@ module.exports = function(RED) {
                 //send the result                                         
                 node.status({fill: "red", shape: "ring", text: "turn off"});
                 node.send(msg);
+                checkPin.initDigitalPin();  //init pin
         });	
     var count = 0;
     var onOffStatus = 0;

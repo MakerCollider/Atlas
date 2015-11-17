@@ -1,10 +1,27 @@
 module.exports = function(RED) {
-var servoModule =require("jsupm_servo");
+    var checkPin = require("../../extends/check_pin");
+    var servoModule =require("jsupm_servo");
     function GroveServo(config) {
         RED.nodes.createNode(this, config);
         this.pwmPin = config.pwmPin;
         var node = this;
         node.pwmPin = node.pwmPin>>>0;
+        var key = 'P'+node.pwmPin;
+        if (checkPin.getDigitalPinValue(key)==1){
+            node.status({fill: "red", shape: "dot", text: "pin repeat"});
+            console.log('Servo pwm pin ' + node.pwmPin +' repeat');
+            return;
+        }
+        else if (checkPin.getDigitalPinValue(key)==0){
+            checkPin.setDigitalPinValue(key, 1);
+            node.status({fill: "blue", shape: "ring", text: "pin check pass"});
+            console.log('Servo pwm pin ' + node.pwmPin +' OK');
+        }
+        else{
+            node.status({fill: "blue", shape: "ring", text: "Unknown"});
+            console.log('unknown pin' + node.pwmPin + ' key value' + checkPin.getDigitalPinValue(key));
+            return;
+        }
         var servo = null;
         var angle = null;
         //pwmPin
@@ -33,6 +50,7 @@ var servoModule =require("jsupm_servo");
 
         //clean up when re-deploying
         this.on('close', function() {
+            checkPin.initDigitalPin();  //init pin
         });
     } 
   
