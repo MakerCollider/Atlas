@@ -8,7 +8,7 @@ else
   echo $CMD >> $1
 fi
 
-CMD1="var checkPin = require('./atlas_hook/check_pin');"
+CMD1="var checkPin = require('./nodes/atlas_nodes/extends/check_pin');"
 if grep check_pin $1
 then
   echo "check pin has already patched"
