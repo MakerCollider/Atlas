@@ -1,11 +1,19 @@
-CMD="require('./atlas_hook').hook(app, server, express);"
 echo "patching... $FILE"
 
+CMD="require('./atlas_hook').hook(app, server, express);"
 if grep atlas_hook $1 
 then
-  echo "has already patched"
+  echo "atlas_hook has already patched"
 else
   echo $CMD >> $1
+fi
+
+CMD1="var checkPin = require('./atlas_hook/check_pin');"
+if grep check_pin $1
+then
+  echo "check pin has already patched"
+else
+  echo $CMD1 >> $1
 fi
 
 echo done
