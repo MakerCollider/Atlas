@@ -53,6 +53,7 @@ module.exports = function(RED){
     	function readrotaryvalue()
     	{
             var absdeg = rotary.abs_deg();
+	    absdeg = Math.round(absdeg);
             node.status({fill: "red", shape: "dot", text: "Rotary value is " + absdeg + " degree."});
             console.log("Rotary value is " + absdeg);
     		var msg = { payload:absdeg };

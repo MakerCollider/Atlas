@@ -23,6 +23,7 @@ module.exports = function(RED){
             console.log('unknown pin' + node.digitalPin + ' key value' + checkPin.getDigitalPinValue(key));
             return;
         }
+	var waiting;
         var is_on = false;
     	var myMotionObj = new grove_motion.BISS0001(node.digitalPin);
         this.on('input', function(msg) {
@@ -31,7 +32,7 @@ module.exports = function(RED){
                 //switch on
                 if (is_on == false) {
                     is_on = true;
-                    var waiting = setInterval(readMotionValue,node.interval);
+                    waiting = setInterval(readMotionValue,node.interval);
                 }
             }//switch off
             else {
@@ -54,5 +55,5 @@ module.exports = function(RED){
     		node.send(msg);
     	}
     }
-    RED.nodes.registerType("Motion", GroveMotion);
+    RED.nodes.registerType("MotionSensor", GroveMotion);
 }
