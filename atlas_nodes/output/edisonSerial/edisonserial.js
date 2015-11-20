@@ -18,7 +18,8 @@ module.exports = function(RED) {
         this.log("Parity : " + this.parity);
         this.log("Stopbits : " + this.stopbits);
 
-        var serial = new mraa.Uart(this.serialport);
+	var serial = new mraa.Uart(0);
+        //var serial = new mraa.Uart(this.serialport);
         serial.setBaudRate(this.serialbaud);
         serial.setMode(this.databits, this.parity, this.stopbits);
 
