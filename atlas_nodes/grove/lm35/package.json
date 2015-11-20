@@ -1,0 +1,13 @@
+{
+	"name"		:	"LM35",
+	"version"	:	"0.0.1",
+	"description"	:	"A Node-RED node for LM35 temperature sensor",
+	"dependencies"	:	{
+	},
+	"keywords"	:	[ "node-red" ],
+	"node-red"	:	{
+		"nodes"	: {
+			"LM35"		:	"lm35.js"
+		}
+	}
+}
