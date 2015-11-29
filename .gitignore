@@ -1,0 +1,4 @@
+# my ignore files
+*.out
+*.files
+tags
